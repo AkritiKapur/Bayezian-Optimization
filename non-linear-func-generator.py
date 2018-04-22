@@ -2,7 +2,7 @@ from collections import Counter
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import mixture
+from matplotlib import cm
 
 
 def generate_non_linear_function_output(x1, x2):
@@ -11,35 +11,33 @@ def generate_non_linear_function_output(x1, x2):
         according to the non linear function specified.
     :return: f(x), output vector
     """
-
-    f = 0.5 * x1 + 0.3 * x2  # Linear combination of inputs
-    # Fit a Gaussian mixture with EM using 4 components
-
-    obs = np.concatenate((20 * np.random.randn(300, 1) + 5, 50 * np.random.randn(200, 1) + 10,
-                          100 * np.random.randn(300, 1) + 9, 170 * np.random.randn(200, 1) + 50))
-    # gmm = mixture.GaussianMixture(n_components=5, covariance_type='full').fit(f)
-
-    g = mixture.GaussianMixture(n_components=4)
-    g.fit(obs)
-    pred = g.predict(f.reshape(len(f), 1))
-    print(Counter(pred.tolist()))
-
-    return pred
+    x1, x2 = np.meshgrid(x1, x2)
+    f = np.cos(x1) * np.cos(x2) * np.exp(- (x1 * x1) - (x2 + 1) * (x2 + 1))
+    f2 = 10 * (x1 / 5 - pow(x1, 3) - pow(x2, 5)) * np.exp(- (x1 * x1) - (x2 * x2))
+    f3 = 1 / 3 * np.exp(- (x1 + 1) * (x1 + 1) - (x2 * x2))
+    f = f + f2 + f3
+    return f
 
 
-def plot_function(input, output):
+def plot_function(x1, x2, out):
     """
         Generates input-output plot for the 2D function
     :param input:
     :param output:
     :return:
     """
-    pass
+    # Plot the surface.
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    x1, x2 = np.meshgrid(x1, x2)
+    surf = ax.plot_surface(x1, x2, out, cmap=cm.coolwarm,
+                           linewidth=0, antialiased=False)
+    plt.show()
 
 if __name__ == '__main__':
-    x1 = np.arange(200)
-    x2 = np.arange(200)
-    x1 = np.random.choice(x1, 50)
-    x2 = np.random.choice(x2, 50)
+    x1 = np.concatenate((np.random.rand(50, 1) - 3, np.random.rand(50, 1) - 2, np.random.rand(50, 1), -1 * np.random.rand(50, 1),
+                         np.random.rand(50, 1) + 1, np.random.rand(50, 1) + 2))
+    x2 = np.concatenate((np.random.rand(50, 1) - 3, np.random.rand(50, 1) - 2, np.random.rand(50, 1), -1 * np.random.rand(50, 1),
+                         np.random.rand(50, 1) + 1, np.random.rand(50, 1) + 2))
     output_vector = generate_non_linear_function_output(x1, x2)
-    # plot_function(input_vector, output_vector)
+    plot_function(x1, x2, output_vector)
