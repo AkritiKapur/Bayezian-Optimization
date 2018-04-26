@@ -3,6 +3,8 @@ from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn import mixture
 
 
 def generate_non_linear_function_output(x1, x2):
@@ -12,9 +14,13 @@ def generate_non_linear_function_output(x1, x2):
     :return: f(x), output vector
     """
     x1, x2 = np.meshgrid(x1, x2)
-    f = np.cos(x1) * np.cos(x2) * np.exp(- (x1 * x1) - (x2 + 1) * (x2 + 1))
-    f2 = 10 * (x1 / 5 - pow(x1, 3) - pow(x2, 5)) * np.exp(- (x1 * x1) - (x2 * x2))
-    f3 = 1 / 3 * np.exp(- (x1 + 1) * (x1 + 1) - (x2 * x2))
+    return get_function(x1, x2)
+
+
+def get_function(x, y):
+    f = np.cos(x) * np.cos(y) * np.exp(- (x * x) - (y + 1) * (y + 1))
+    f2 = 10 * (x / 5 - pow(x, 3) - pow(y,  5)) * np.exp(- (x * x) - (y * y))
+    f3 = 1 / 3 * np.exp(- (x + 1) * (x + 1) - (y * y))
     f = f + f2 + f3
     return f
 
