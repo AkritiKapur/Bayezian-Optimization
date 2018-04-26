@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# probability of changing mode.
+beta = 0.2
+
 
 def generate_data(T):
     """
@@ -37,6 +40,13 @@ def generate_data(T):
         # muu1, muu2, muu3 = np.random.normal(loc=0, scale=sigma, size=3)
 
     return {"y1": y1, "y2": y2, "z": z}
+
+
+def change_mode():
+    """
+    :return: True if the mode is to be changed else False
+    """
+    return np.random.random() <= beta
 
 
 def generate_data_switched_model(T):
