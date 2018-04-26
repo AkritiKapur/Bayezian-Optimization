@@ -2,17 +2,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def generate_data():
+def generate_data(T):
     """
         Generates time series data for two elements
         dependent on the following equations:
         y2(t) = y1(t-1) + μ1
         y1(t) = α1 y1(t-1) + α2 y2(t-1) + μ2
 
+        and observation:
+        z(t) = y1(t) + μ3
+
         where  μi ~ Normal(0,σ2)
+    :param T time interval till the data has to be generated
     :return:
     """
-    pass
+    alpha1 = 0.1
+    alpha2 = 0.3
+    sigma = 5
+
+    # initialize random values for the two variables at timestep 0
+    y1 = {0: np.random.random_sample()}
+    y2 = {0: np.random.random_sample()}
+
+    muu1, muu2, muu3 = np.random.normal(loc=0, scale=sigma, size=3)
+    z = {0: y1[0] + muu3}
+
+    # populate data according to the equations
+    for t in range(1, T):
+        y2[t] = y1[t-1] + muu1
+        y1[t] = alpha1 * y1[t-1] + alpha2 * y2[t-1] + muu2
+
+        z[t] = y1[t] + muu3
+
+    return {"y1": y1, "y2": y2, "z": z}
 
 
 def plot_time_series_data(data):
@@ -21,8 +43,18 @@ def plot_time_series_data(data):
     :param data: Data to be plotted
     :return: None
     """
-    pass
+    x = np.arange(len(data['y1']))
+
+    plt.plot(x, data['y1'].values(), color="green")
+    plt.plot(x, data['y2'].values(), color="blue")
+    plt.plot(x, data['z'].values(), color="red")
+
+    plt.show()
 
 
 if __name__ == '__main__':
-    pass
+    # Generate data for time stamp
+    data = generate_data(200)
+
+    # Plot the samples
+    plot_time_series_data(data)
